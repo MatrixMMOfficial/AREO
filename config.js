@@ -1,10 +1,5 @@
-const config = {
-	http: {
-		prefix: '/http/'
-	},
-	ws: {
-		prefix: '/ws/'
-	},
-	codec: 'plain',
-	scope: 'gel'
-};
+const prefix = '/go/',
+	bare = '/bare/',
+	codec = 'plain';
+
+export { prefix, bare, codec };

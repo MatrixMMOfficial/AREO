@@ -1,12 +1,9 @@
-import { rewriteHTML } from './html.js';
 import { scope } from './scope.js';
 
-const ctx = JSON.parse(document.getElementsByTagName("script")[0].innerHTML);
-
-let fakeLocation = new URL(location.href.match(/(?<=\/http\/).*/g)[0]);
+let fakeLocation = new URL(location.href.match(/(?<=\/go\/).*/g)[0]);
 
 function wrap(url) {
-	return ctx.http.prefix + url;
+	return prefix + url;
 }
 
 Audio = new Proxy(Audio, {
@@ -67,7 +64,6 @@ history.replaceState = new Proxy(history.replaceState, historyState);
 
 const locationProxy = new Proxy({}, {
 	get(target, prop) {
-		console.log`location.${prop}: ${fakeLocation[prop]}`;
 		if (typeof target[prop] === 'function')
 			return {
 				assign: url => wrap(url),
@@ -77,16 +73,15 @@ const locationProxy = new Proxy({}, {
 		return fakeLocation[prop];
 	},
 	set(target, prop, value) {
-		console.log`set location ${prop}: ${value}`;
 		if (prop === 'href')
-			location[prop] = ctx.http.prefix + fakeLocation.origin + value;
+			location[prop] = config.http.prefix + fakeLocation.origin + value;
 	}
 })
 document.location = locationProxy;
 
 Node.prototype.textContent = new Proxy(Node.prototype.textContent, {
     set(target, prop, value) {
-        if (Node.tagname === 'SCRIPT')
+        if (Node.tagname === 'script')
             value = scope(value);
 
         return Reflect.set(...arguments);
@@ -120,7 +115,7 @@ WebSocket = new Proxy(WebSocket, {
 	construct(target, args) {
 		[url] = args;
 
-		url = 'ws://' + location.host + ctx.ws.prefix + url;
+		url = 'ws://' + location.host + config.ws.prefix + url;
 
 		return Reflect.construct(target, [url]);
 	}

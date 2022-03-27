@@ -1,11 +1,10 @@
 function allowOrigin(url) {
+    /*
     try {
         const controller = new AbortController();
         const signal = controller.signal;
 
-        await fetch(url, {
-            signal
-        });
+        await fetch(url, { signal });
 
         // Don't actually send the request.
         controller.abort()
@@ -13,6 +12,7 @@ function allowOrigin(url) {
         if (err.name !== 'AbortError')
             return false;
     }
+    */
 
     return true;
 }
