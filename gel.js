@@ -7,7 +7,7 @@ onevent = new Proxy(onevent, {
 Clients.get = async function(id) {
     const client = await Clients.get(id);
     
-    client.url = client.url.match(/(?<=\/http\/).*/g)[0];
+    client.url = client.url.match(/(?<=\/service\/).*/g)[0];
 
     return client;
 }
